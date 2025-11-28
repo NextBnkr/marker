@@ -18,17 +18,17 @@ class BaseRenderer:
     image_blocks: Annotated[
         Tuple[BlockTypes, ...], "The block types to consider as images."
     ] = (BlockTypes.Picture, BlockTypes.Figure)
-    extract_images: Annotated[bool, "Extract images from the document."] = True
+    extract_images: Annotated[bool, "Extract images from the document."] = False
     image_extraction_mode: Annotated[
         Literal["lowres", "highres"],
         "The mode to use for extracting images.",
     ] = "highres"
     keep_pageheader_in_output: Annotated[
         bool, "Keep the page header in the output HTML."
-    ] = False
+    ] = True
     keep_pagefooter_in_output: Annotated[
         bool, "Keep the page footer in the output HTML."
-    ] = False
+    ] = True
     add_block_ids: Annotated[bool, "Whether to add block IDs to the output HTML."] = (
         False
     )
