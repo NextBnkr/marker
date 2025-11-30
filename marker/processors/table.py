@@ -49,7 +49,7 @@ class TableProcessor(BaseProcessor):
     contained_block_types: Annotated[
         List[BlockTypes],
         "Block types to remove if they're contained inside the tables.",
-    ] = (BlockTypes.Text, BlockTypes.TextInlineMath)
+    ] = (BlockTypes.Text, BlockTypes.TextInlineMath, BlockTypes.Line)
     row_split_threshold: Annotated[
         float,
         "The percentage of rows that need to be split across the table before row splitting is active.",
