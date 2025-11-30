@@ -30,7 +30,7 @@ class TableProcessor(BaseProcessor):
     A processor for recognizing tables in the document.
     """
 
-    block_types = (BlockTypes.Table, BlockTypes.TableOfContents, BlockTypes.Form)
+    block_types = (BlockTypes.TableOfContents, BlockTypes.Form)
     table_rec_batch_size: Annotated[
         int,
         "The batch size to use for the table recognition model.",
@@ -90,7 +90,6 @@ class TableProcessor(BaseProcessor):
             for block in page.contained_blocks(document, self.block_types):
                 if block.block_type == BlockTypes.Table:
                     block.polygon = block.polygon.expand(0.01, 0.01)
-                    continue
                 image = block.get_image(document, highres=True)
                 image_poly = block.polygon.rescale(
                     (page.polygon.width, page.polygon.height),
