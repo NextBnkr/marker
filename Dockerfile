@@ -11,7 +11,7 @@ ENV PATH="/root/.local/bin:$PATH"
 COPY pyproject.toml poetry.lock* ./
 
 RUN poetry config virtualenvs.in-project true && \
-    poetry install --no-root --no-dev
+    poetry install --no-root
 
 # Runtime
 FROM nvidia/cuda:12.2-runtime-ubuntu22.04
