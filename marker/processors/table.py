@@ -90,6 +90,7 @@ class TableProcessor(BaseProcessor):
             for block in page.contained_blocks(document, self.block_types):
                 if block.block_type == BlockTypes.Table:
                     block.polygon = block.polygon.expand(0.01, 0.01)
+                    continue
                 image = block.get_image(document, highres=True)
                 image_poly = block.polygon.rescale(
                     (page.polygon.width, page.polygon.height),
