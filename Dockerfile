@@ -14,7 +14,7 @@ RUN poetry config virtualenvs.in-project true && \
     poetry install --no-root
 
 # Runtime
-FROM nvidia/cuda:12.2-runtime-ubuntu22.04
+FROM nvidia/cuda:12.2.2-runtime-ubuntu22.04
 
 WORKDIR /app
 
