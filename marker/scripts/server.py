@@ -1,3 +1,4 @@
+import asyncio
 import traceback
 
 import click
@@ -14,13 +15,14 @@ from contextlib import asynccontextmanager
 from typing import Optional, Annotated
 import io
 
-from fastapi import FastAPI, Form, File, UploadFile
+from fastapi import FastAPI, Form, File, UploadFile, HTTPException
 from marker.converters.pdf import PdfConverter
 from marker.models import create_model_dict
 from marker.settings import settings
 
 app_data = {}
 
+UPLOAD_SEMAPHORE = asyncio.Semaphore(3)
 
 UPLOAD_DIRECTORY = "./uploads"
 os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
@@ -142,21 +144,32 @@ async def convert_pdf_upload(
         ..., description="The PDF file to convert.", media_type="application/pdf"
     ),
 ):
-    upload_path = os.path.join(UPLOAD_DIRECTORY, file.filename)
-    with open(upload_path, "wb+") as upload_file:
-        file_contents = await file.read()
-        upload_file.write(file_contents)
+    # 尝试非阻塞获取 semaphore，拿不到则立即返回 429
+    try:
+        await asyncio.wait_for(UPLOAD_SEMAPHORE.acquire(), timeout=0)
+    except asyncio.TimeoutError:
+        raise HTTPException(
+            status_code=429, detail="Too many concurrent uploads."
+        )
 
-    params = CommonParams(
-        filepath=upload_path,
-        page_range=page_range,
-        force_ocr=force_ocr,
-        paginate_output=paginate_output,
-        output_format=output_format,
-    )
-    results = await _convert_pdf(params)
-    os.remove(upload_path)
-    return results
+    try:
+        upload_path = os.path.join(UPLOAD_DIRECTORY, file.filename)
+        with open(upload_path, "wb+") as upload_file:
+            file_contents = await file.read()
+            upload_file.write(file_contents)
+
+        params = CommonParams(
+            filepath=upload_path,
+            page_range=page_range,
+            force_ocr=force_ocr,
+            paginate_output=paginate_output,
+            output_format=output_format,
+        )
+        results = await _convert_pdf(params)
+        os.remove(upload_path)
+        return results
+    finally:
+        UPLOAD_SEMAPHORE.release()
 
 
 @click.command()
