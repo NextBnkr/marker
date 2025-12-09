@@ -22,7 +22,7 @@ from marker.settings import settings
 
 app_data = {}
 
-UPLOAD_SEMAPHORE = asyncio.Semaphore(3)
+UPLOAD_SEMAPHORE = asyncio.Semaphore(os.getenv("UPLOAD_SEMAPHORE", 3))
 
 UPLOAD_DIRECTORY = "./uploads"
 os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
