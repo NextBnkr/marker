@@ -146,7 +146,7 @@ async def convert_pdf_upload(
 ):
     # 尝试非阻塞获取 semaphore，拿不到则立即返回 429
     try:
-        await asyncio.wait_for(UPLOAD_SEMAPHORE.acquire(), timeout=0)
+        await asyncio.wait_for(UPLOAD_SEMAPHORE.acquire(), timeout=1)
     except asyncio.TimeoutError:
         raise HTTPException(
             status_code=429, detail="Too many concurrent uploads."
