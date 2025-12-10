@@ -54,6 +54,17 @@ async def root():
     )
 
 
+@app.get("/healthz")
+async def healthz():
+    models_loaded = "models" in app_data and app_data.get("models") is not None
+    model_count = len(app_data.get("models", {}))
+    return {
+        "status": "ok",
+        "models_loaded": models_loaded,
+        "model_count": model_count,
+    }
+
+
 class CommonParams(BaseModel):
     filepath: Annotated[
         Optional[str], Field(description="The path to the PDF file to convert.")
