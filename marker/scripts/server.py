@@ -56,9 +56,7 @@ async def root():
 
 @app.get("/ping")
 async def ping():
-    return {
-        "status": "ok",
-    }
+    return {"status": "healthy"}
 
 
 class CommonParams(BaseModel):
