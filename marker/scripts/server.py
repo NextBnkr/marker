@@ -181,7 +181,7 @@ async def convert_pdf_upload(
 
 @click.command()
 @click.option("--port", type=int, default=8000, help="Port to run the server on")
-@click.option("--host", type=str, default="127.0.0.1", help="Host to run the server on")
+@click.option("--host", type=str, default="0.0.0.0", help="Host to run the server on")
 def server_cli(port: int, host: str):
     import uvicorn
 
