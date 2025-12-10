@@ -9,5 +9,5 @@ RUN poetry config virtualenvs.in-project true && poetry install --no-root
 COPY . .
 ENV PORT=8000
 EXPOSE 8000
-CMD ["sh","-lc","ln -sfn /workspace /root/.cache/datalab && .venv/bin/python ./marker_server.py --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh","-lc",".venv/bin/python ./marker_server.py --host 0.0.0.0 --port ${PORT:-8000}"]
 
