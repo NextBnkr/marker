@@ -24,6 +24,8 @@ def convert(common_params):
     assert fmt in ["markdown", "json", "html", "chunks"]
     config_parser = ConfigParser(options)
     config_dict = config_parser.generate_config_dict()
+    if "force_ocr" in options:
+        config_dict["force_ocr"] = bool(options["force_ocr"]) 
     config_dict["pdftext_workers"] = 1
     converter = PdfConverter(
         config=config_dict,

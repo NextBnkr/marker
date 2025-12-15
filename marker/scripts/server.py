@@ -98,6 +98,8 @@ async def _convert_pdf(params: CommonParams):
         options = params.model_dump()
         config_parser = ConfigParser(options)
         config_dict = config_parser.generate_config_dict()
+        if "force_ocr" in options:
+            config_dict["force_ocr"] = bool(options["force_ocr"]) 
         config_dict["pdftext_workers"] = 1
         converter_cls = PdfConverter
         converter = converter_cls(
