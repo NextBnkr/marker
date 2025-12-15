@@ -2,6 +2,7 @@ import os
 import io
 import base64
 import tempfile
+import shutil
 import urllib.request
 import traceback
 
@@ -56,7 +57,15 @@ def handler(event):
         if pdf_url:
             fd, tmp_path = tempfile.mkstemp(suffix=".pdf")
             os.close(fd)
-            urllib.request.urlretrieve(pdf_url, tmp_path)
+            username = os.getenv("BASIC_AUTH_USERNAME")
+            password = os.getenv("BASIC_AUTH_PASSWORD")
+            if username and password:
+                token = base64.b64encode(f"{username}:{password}".encode()).decode()
+                req = urllib.request.Request(pdf_url, headers={"Authorization": f"Basic {token}"})
+            else:
+                req = urllib.request.Request(pdf_url)
+            with urllib.request.urlopen(req) as r, open(tmp_path, "wb") as f:
+                shutil.copyfileobj(r, f)
             common_params["filepath"] = tmp_path
         result = convert(common_params)
         if tmp_path and os.path.exists(tmp_path):
