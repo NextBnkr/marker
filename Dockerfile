@@ -1,7 +1,8 @@
 FROM runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
 
 WORKDIR /app
-RUN apt-get update && apt-get install -y python3.11 python3-pip curl awscli && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y python3.11 python3-pip curl unzip && rm -rf /var/lib/apt/lists/*
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install && rm -rf awscliv2.zip aws
 RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="/root/.local/bin:$PATH"
 COPY pyproject.toml poetry.lock* ./
